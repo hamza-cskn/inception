@@ -1,0 +1,75 @@
+services:
+  nginx:
+    container_name: hcoskun-nginx
+    image: hcoskun-nginx
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - hcoskun_network
+    volumes:
+      - ./requirements/nginx/conf:/etc/nginx/hcoskun-config
+      - webroot:/var/www/html
+    depends_on:
+      - wordpress
+    tty: true
+    stdin_open: true
+  wordpress:
+    container_name: hcoskun-wordpress
+    image: hcoskun-wordpress
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    networks:
+      - hcoskun_network
+    volumes:
+      - webroot:/var/www/html
+      - ./requirements/wordpress/php-fpm:/etc/php/8.2/fpm/pool.d
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mariadb
+  mariadb:
+    container_name: hcoskun-mariadb
+    image: hcoskun-mariadb
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    networks:
+      - hcoskun_network
+    volumes:
+      - ./requirements/mariadb/data:/var/lib/mysql
+      - ./requirements/mariadb/config:/etc/mysql/hcoskun.conf.d
+    secrets:
+      - db_root_password
+      - db_password
+    tty: true
+    stdin_open: true
+
+networks:
+  hcoskun_network:
+    name: hcoskun_network
+    driver: bridge
+    external: false
+
+volumes:
+  webroot:
+    name: webroot
+    external: false
+  database:
+    name: database
+    external: false
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  credentials:
+    file: ../secrets/credentials.txt

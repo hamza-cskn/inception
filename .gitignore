@@ -1,0 +1,4 @@
+**/.env
+secrets/
+.vscode/
+srcs/requirements/mariadb/data/
