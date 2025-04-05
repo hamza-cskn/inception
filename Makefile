@@ -16,4 +16,6 @@ re: down build up
 
 clean:
 	docker compose -f srcs/docker-compose.yml down
-	docker rmi $(shell docker images | grep "^hcoskun" | awk '{print $3}')
+	bash ./clean.sh
+	docker volume rm webroot
+	docker volume rm database

@@ -1,0 +1,1 @@
+docker rmi $(docker images | grep '^hcoskun' | awk '{print $3}')
