@@ -70,12 +70,6 @@ init() {
     export MARIADB_USER=${MARIADB_USER:-wordpress}
     verify_minimum_env
 
-	#todo
-	echo ROOT_PASSWORD = $MARIADB_ROOT_PASSWORD
-	echo PASSWORD = $MARIADB_PASSWORD
-	echo DATABASE = $MARIADB_DATABASE
-	echo USER = $MARIADB_USER
-
     mysql_note "Starting temporary MariaDB server"
     temp_server_start
 

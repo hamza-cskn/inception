@@ -10,12 +10,14 @@ services:
     networks:
       - hcoskun_network
     volumes:
-      - ./requirements/nginx/conf:/etc/nginx/hcoskun-config
+      - ./requirements/nginx/config:/etc/nginx/hcoskun-config
       - webroot:/var/www/html
+      - ./requirements/nginx/certificates:/etc/ssl/certs
     depends_on:
       - wordpress
     tty: true
     stdin_open: true
+    restart: always
   wordpress:
     container_name: hcoskun-wordpress
     image: hcoskun-wordpress
@@ -28,11 +30,12 @@ services:
       - hcoskun_network
     volumes:
       - webroot:/var/www/html
-      - ./requirements/wordpress/php-fpm:/etc/php/8.2/fpm/pool.d
+      - ./requirements/wordpress/config:/etc/php/8.2/fpm/pool.d
     tty: true
     stdin_open: true
     depends_on:
       - mariadb
+    restart: always
   mariadb:
     container_name: hcoskun-mariadb
     image: hcoskun-mariadb
@@ -44,13 +47,14 @@ services:
     networks:
       - hcoskun_network
     volumes:
-      - ./requirements/mariadb/data:/var/lib/mysql
+      - database:/var/lib/mysql
       - ./requirements/mariadb/config:/etc/mysql/hcoskun.conf.d
     secrets:
       - db_root_password
       - db_password
     tty: true
     stdin_open: true
+    restart: always
 
 networks:
   hcoskun_network:
