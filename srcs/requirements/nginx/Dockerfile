@@ -6,8 +6,12 @@ RUN apt update
 RUN apt install -y nginx
 RUN apt install -y openssl
 
-EXPOSE 80
+RUN mkdir -p /etc/nginx/hcoskun-config
+
+EXPOSE 443
 
 STOPSIGNAL SIGQUIT
+
+ENTRYPOINT [ "./setup/docker-entrypoint.sh" ]
 
 CMD [ "nginx", "-c", "/etc/nginx/hcoskun-config/nginx.conf", "-g", "daemon off;" ]
